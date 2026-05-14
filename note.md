@@ -26,3 +26,9 @@ DROP TABLE IF EXISTS schema_migrations;
 DROP TABLE IF EXISTS movies;
 
 migrate -path migrations -database "$env:GREENLIGHT_DB_DSN" up 
+
+
+# In git bash
+migrate create -seq -ext .sql -dir ./migrations add_movies_indexes
+source .env
+migrate -path ./migrations -database $GREENLIGHT_DB_DSN up
