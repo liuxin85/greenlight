@@ -20,10 +20,18 @@ type config struct {
 	port int
 	env  string
 	db   struct {
-		dsn string
+		dsn          string
 		maxOpenConns int
 		maxIdleConns int
-		maxIdleTime time.Duration
+		maxIdleTime  time.Duration
+	}
+	// Add a new limiter struct containg fields for the reuests-per-second and
+	// burst values, and a boolean field with we can use to enable/disable rate limiting
+	// altogether
+	limiter struct {
+		rps     float64
+		burst   int
+		enabled bool
 	}
 }
 
@@ -46,7 +54,11 @@ func main() {
 	// Read the connection pool settings from command-line flags into the config struct
 	flag.IntVar(&cfg.db.maxOpenConns, "db-max-open-conns", 25, "PostgreSQL max open connections")
 	flag.IntVar(&cfg.db.maxIdleConns, "db-max-idle-conns", 25, "PostgreSQL max idle connections")
-	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15 * time.Minute, "PostgreSQL max connection idle time")
+	flag.DurationVar(&cfg.db.maxIdleTime, "db-max-idle-time", 15*time.Minute, "PostgreSQL max connection idle time")
+
+	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", 2, "Rate limiter maximum requests per second")
+	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 4, "Rate limiter maximum burst")
+	flag.BoolVar(&cfg.limiter.enabled, "limiter-enabled", true, "Enable rate limiter")
 
 	flag.Parse()
 
