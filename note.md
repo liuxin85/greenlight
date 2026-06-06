@@ -32,3 +32,7 @@ migrate -path migrations -database "$env:GREENLIGHT_DB_DSN" up
 migrate create -seq -ext .sql -dir ./migrations add_movies_indexes
 source .env
 migrate -path ./migrations -database $GREENLIGHT_DB_DSN up
+
+
+# Global Rate Limiting
+go get golang.org/x/time/rate@latest
