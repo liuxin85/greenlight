@@ -6,6 +6,7 @@ import (
 	"errors"
 	"time"
 
+	"github.com/lib/pq"
 	"golang.org/x/crypto/bcrypt"
 	"greenlight.alexedwards.net/internal/validator"
 )
@@ -13,6 +14,14 @@ import (
 var (
 	ErrDuplicateEmail = errors.New("duplicate email")
 )
+
+func isDuplicateEmailError(err error) bool {
+	var pqError *pq.Error
+
+	return errors.As(err, &pqError) &&
+		pqError.Code == "23505" &&
+		pqError.Constraint == "users_email_key"
+}
 
 type User struct {
 	ID        int64     `json:"id"`
@@ -102,7 +111,7 @@ func (m UserModel) Insert(user *User) error {
 
 	if err != nil {
 		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
+		case isDuplicateEmailError(err):
 			return ErrDuplicateEmail
 		default:
 			return err
@@ -169,7 +178,7 @@ func (m UserModel) Update(user *User) error {
 
 	if err != nil {
 		switch {
-		case err.Error() == `pq: duplicate key value violates unique constraint "users_email_key"`:
+		case isDuplicateEmailError(err):
 			return ErrDuplicateEmail
 
 		case errors.Is(err, sql.ErrNoRows):

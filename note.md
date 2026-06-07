@@ -28,13 +28,13 @@ DROP TABLE IF EXISTS movies;
 migrate -path migrations -database "$env:GREENLIGHT_DB_DSN" up 
 
 
-# In git bash
+## In git bash
 migrate create -seq -ext .sql -dir ./migrations add_movies_indexes
 source .env
 migrate -path ./migrations -database $GREENLIGHT_DB_DSN up
 
 
-# Global Rate Limiting
+## Global Rate Limiting
 go get golang.org/x/time/rate@latest
 
 ## Setting up the users Database
@@ -42,3 +42,6 @@ migrate create -seq -ext=.sql -dir=./migrations create_users_table
 migrate --path=./migrations -database=$GREENLIGHT_DB_DSN up
 
 go get golang.org/x/crypto/bcrypt@latest
+
+## Email
+go get github.com/go-mail/mail/v2@v2
