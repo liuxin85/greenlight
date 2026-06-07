@@ -52,3 +52,9 @@ Mailtrap Email Sandbox:
 - SMTP port: `2525`
 - Copy the current username and password from the sandbox Integration tab.
 - Start the API with `-smtp-username` and `-smtp-password`; do not commit sandbox credentials.
+
+
+## Activate User
+migrate create -seq -ext .sql -dir ./migrations create_tokens_table
+
+migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up

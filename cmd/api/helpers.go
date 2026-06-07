@@ -138,7 +138,7 @@ func (app *application) readInt(qs url.Values, key string, defaultValue int, v *
 	}
 	i, err := strconv.Atoi(s)
 	if err != nil {
-		v.AddErrors(key, "must be an integer value")
+		v.AddError(key, "must be an integer value")
 		return defaultValue
 	}
 	return i
@@ -152,7 +152,7 @@ func (app *application) background(fn func()) {
 	// Lauch the background goroutine.
 	go func() {
 		defer app.wg.Done()
-		
+
 		defer func() {
 			if err := recover(); err != nil {
 				app.logger.Error(fmt.Sprintf("%v", err))
