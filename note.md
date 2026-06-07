@@ -45,3 +45,10 @@ go get golang.org/x/crypto/bcrypt@latest
 
 ## Email
 go get github.com/go-mail/mail/v2@v2
+
+Mailtrap Email Sandbox:
+
+- SMTP host: `sandbox.smtp.mailtrap.io`
+- SMTP port: `2525`
+- Copy the current username and password from the sandbox Integration tab.
+- Start the API with `-smtp-username` and `-smtp-password`; do not commit sandbox credentials.
