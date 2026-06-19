@@ -132,7 +132,7 @@ func (app *application) authenicate(next http.Handler) http.Handler {
 		if err != nil {
 			switch {
 			case errors.Is(err, data.ErrRecordNotFound):
-				app.invalidCredentialsResponse(w, r)
+				app.invalidAuthenicationTokenResponse(w, r)
 			default:
 				app.serverErrorResponse(w, r, err)
 			}
