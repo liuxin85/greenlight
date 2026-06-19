@@ -24,6 +24,9 @@ func isDuplicateEmailError(err error) bool {
 		pqError.Constraint == "users_email_key"
 }
 
+// Declare a new AnomymousUser variable.
+var AnonymousUser = &User{}
+
 type User struct {
 	ID        int64     `json:"id"`
 	CreatedAt time.Time `json:"created_at"`
@@ -32,6 +35,11 @@ type User struct {
 	Password  password  `json:"-"`
 	Activated bool      `json:"activated"`
 	Version   int       `json:"-"`
+}
+
+// Check if a User instance if the AnomymousUser
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
 }
 
 type password struct {
