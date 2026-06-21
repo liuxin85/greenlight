@@ -58,3 +58,10 @@ Mailtrap Email Sandbox:
 migrate create -seq -ext .sql -dir ./migrations create_tokens_table
 
 migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up
+
+
+go install honnef.co/go/tools/cmd/staticcheck@latest
+
+go build -o=./bin/api ./cmd/api
+
+./bin/api -port=4040 -db-dsn=postgres://greenlight:pa55word@localhost/greenlight?sslmode=disable

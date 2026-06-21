@@ -33,3 +33,33 @@ db/migrations/new:
 db/migrations/up: confirm
 	@echo 'Running up migrations...'
 	migrate -path ./migrations -database ${GREENLIGHT_DB_DSN} up
+
+# Quality control
+## tidy: format all .go files and tidy module dependencies
+.PHONY: tidy
+tidy:
+	@echo 'Formatting .go files...'
+	go fmt ./...
+	@echo 'Tidying module dependencies...'
+	go mod tidy
+## audit: run quality control checks
+.PHONY: audit
+audit:
+	@echo 'Checking module dependencies'
+	go mod tidy -diff
+	go mod verify
+	@echo 'Vetting code...'
+	go vet ./...
+	staticcheck ./...
+	@echo 'Running tests...'
+	go test -vet=off ./...
+
+# =================
+# BUILD
+# =================
+## build/api: build the cmd/api application
+.PHONY: build/api
+build/api:
+	@echo 'Building cmd/api...'
+	go build -ldflags='-s' -o=./bin/api ./cmd/api
+	GOOS=linux GOARCH=amd64 go build -ldflags='-s' -o=./bin/linux_amd64/api ./cmd/api
